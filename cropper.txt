@@ -1,0 +1,42 @@
+fun cropper() {
+
+        for (x in 2..31) {
+            savePng("dares", Texture("cards/card (${x})/us_durex_pome_tod_game_july_cards_v2-${x}-1.jpg"), x - 1)
+        }
+        for (x in 32..66) {
+            savePng("questions", Texture("cards/card (${x})/us_durex_pome_tod_game_july_cards_v2-${x}-1.jpg"), x - 31)
+        }
+    }
+
+    private fun getImg(texture: Texture): Pixmap {
+        val halfWidth = 1357
+        val height = 905
+        val textureData = texture.textureData
+        if (!textureData.isPrepared) {
+            textureData.prepare()
+        }
+        val pixMap = Pixmap(
+                halfWidth - 150,
+                height - 100,
+                textureData.format
+        )
+        pixMap.drawPixmap(textureData.consumePixmap(), 0, 0, halfWidth,
+                145,
+                halfWidth - 150,
+                height
+        )
+        return pixMap
+    }
+
+    private fun savePng(folder: String, texture: Texture, counter: Int) {
+        try {
+            var fh: FileHandle
+            do {
+                fh = FileHandle(folder + "/${counter}.png")
+            } while (fh.exists())
+            val pixMap = getImg(texture)
+            PixmapIO.writePNG(fh, pixMap)
+            pixMap.dispose()
+        } catch (e: Exception) {
+        }
+    }
